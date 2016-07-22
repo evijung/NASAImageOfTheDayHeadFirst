@@ -10,46 +10,60 @@
     tools:context="com.hitachi_tstv.samsen.tunyaporn.nasadailyimage.MainActivity"
     android:background="@color/material_grey_900">
 
-    <TextView
+    <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/test_image_title"
-        android:id="@+id/txtTitle"
-        android:focusableInTouchMode="false"
-        android:textSize="@dimen/text_title"
-        android:textStyle="bold|italic"
-        android:textColor="@color/text_color"
-        android:layout_margin="5dp" />
+        android:id="@+id/scrollView" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/test_image_date"
-        android:id="@+id/txtDate"
-        android:layout_below="@+id/txtTitle"
-        android:focusableInTouchMode="false"
-        android:textSize="@dimen/text_detail"
-        android:textColor="@color/text_color" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <ImageView
-        android:layout_width="300dp"
-        android:layout_height="350dp"
-        android:id="@+id/imageView"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/txtDate"
-        android:src="@drawable/test_image"
-        android:layout_margin="10dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/test_image_title"
+                android:id="@+id/txtTitle"
+                android:focusableInTouchMode="false"
+                android:textSize="@dimen/text_title"
+                android:textStyle="bold|italic"
+                android:textColor="@color/text_color"
+                android:layout_margin="5dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/test_image_description"
-        android:id="@+id/txtDescription"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/imageView"
-        android:focusableInTouchMode="false"
-        android:textSize="@dimen/text_detail"
-        android:textColor="@color/text_color"
-        android:background="#78000000"
-        android:padding="10dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/test_image_date"
+                android:id="@+id/txtDate"
+                android:layout_below="@+id/txtTitle"
+                android:focusableInTouchMode="false"
+                android:textSize="@dimen/text_detail"
+                android:textColor="@color/text_color" />
+
+            <ImageView
+                android:layout_width="300dp"
+                android:layout_height="350dp"
+                android:id="@+id/imageView"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/txtDate"
+                android:src="@drawable/test_image"
+                android:layout_margin="10dp"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/test_image_description"
+                android:id="@+id/txtDescription"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/imageView"
+                android:focusableInTouchMode="false"
+                android:textSize="@dimen/text_detail"
+                android:textColor="@color/text_color"
+                android:background="#78000000"
+                android:padding="10dp"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>
