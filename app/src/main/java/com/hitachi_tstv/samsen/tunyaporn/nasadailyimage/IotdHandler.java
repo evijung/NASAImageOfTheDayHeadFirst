@@ -1,15 +1,22 @@
 package com.hitachi_tstv.samsen.tunyaporn.nasadailyimage;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.nfc.Tag;
+import android.util.Log;
 
+import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
@@ -37,7 +44,12 @@ public class IotdHandler extends DefaultHandler {
             xmlReader.setContentHandler(this);
             InputStream inputStream = new URL(url).openStream();
             xmlReader.parse(new InputSource(inputStream));
-        } catch (Exception e) {
+        } catch (IOException e) {
+            Log.e("TAG", e.toString());
+        } catch (SAXException e) {
+            Log.e("TAG2", e.toString());
+        } catch (ParserConfigurationException e) {
+            Log.e("TAG3", e.toString());
         }
     }
 
@@ -45,9 +57,87 @@ public class IotdHandler extends DefaultHandler {
         try {
             HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(url).openConnection();
             httpURLConnection.setDoInput(true);
-
-        } catch (Exception e) {
-
+            httpURLConnection.connect();
+            InputStream inputStream = httpURLConnection.getInputStream();
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            inputStream.close();
+            return bitmap;
+        } catch (IOException e) {
+            Log.e("TAG", e.toString());
+            return null;
         }
     }
+
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+        if (localName.equals("url")) {
+            inUrlABoolean = true;
+        } else {
+            inUrlABoolean = false;
+        }
+
+        if (localName.startsWith("item")) {
+            inItemABoolean = true;
+        } else if (inItemABoolean) {
+            if (localName.equals("title")) {
+                inTitleABoolean = true;
+            } else {
+                inTitleABoolean = false;
+            }
+
+            if (localName.equals("description")) {
+                inDescriptionABoolean = true;
+            } else {
+                inDescriptionABoolean = false;
+            }
+
+            if (localName.equals("pubDate")) {
+                inDateABoolean = true;
+            } else {
+                inDateABoolean = false;
+            }
+
+            if (imageBitmap == null) {
+                Log.d("Value", "image-url : " + attributes.getValue("url"));
+                imageBitmap = getBitmap(attributes.getValue("url"));
+            }
+        }
+    }
+
+    public void characters(char ch[], int start, int length) {
+        String chars = new String(ch).substring(start, start + length);
+
+        if (inTitleABoolean && titleString == null) {
+            titleString = chars;
+            Log.d("Value", "Title : " + titleString);
+        }
+        if (inDateABoolean && dateString == null) {
+            dateString = chars;
+            Log.d("Value", "Date : " + dateString);
+        }
+        if (inDescriptionABoolean) {
+            descriptionStringBuffer.append(chars);
+            Log.d("Value", "Description : " + descriptionStringBuffer);
+        }
+    }
+
+    public Bitmap getImageBitmap() {
+        return imageBitmap;
+    }
+
+    public String getTitleString() {
+        return titleString;
+    }
+
+    public StringBuffer getDescriptionStringBuffer() {
+        return descriptionStringBuffer;
+    }
+
+    public String getDateString() {
+        return dateString;
+    }
+
+
 }
+
+
+
